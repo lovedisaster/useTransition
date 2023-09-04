@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useTransition } from 'react';
+
+import { generateProducts } from './data';
+import ProductList from './components/ProductList';
+
+const dummyProducts = generateProducts();
+
+function filterProducts(filterTerm) {
+  if (!filterTerm) {
+    return dummyProducts;
+  }
+  return dummyProducts.filter((product) => product.includes(filterTerm));
+}
 
 function App() {
+  const [filterTerm, setFilterTerm] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const filteredProducts = filterProducts(filterTerm);
+
+  function updateFilterHandler(event) {
+    startTransition(() => {
+      setFilterTerm(event.target.value);
+    })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="app">
+      <input type="text" placeholder="Input product here" onChange={updateFilterHandler} />
+      <br/>
+      {isPending ? <>Loading ...</> : <ProductList products={filteredProducts} />}
+      {/* <ProductList products={filteredProducts} /> */}
     </div>
   );
 }
