@@ -1,8 +1,10 @@
-function ProductList({ products }) {
+import React from 'react';
+
+function ProductList({ products, shuffled }) {
   return (
-    <ul>
+    <ul className={shuffled ? "shuffled" : ""}>
       {products.map((product) => (
-        <li>{product}</li>
+        <li key={product}>{product}</li>
       ))}
     </ul>
   );
